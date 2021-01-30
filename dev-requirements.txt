@@ -6,3 +6,4 @@ twine
 sphinx
 sphinx-autobuild
 sphinx_rtd_theme
+pip==21.0.1
