@@ -2,9 +2,8 @@ import os
 import subprocess
 import time
 from datetime import datetime
-
 import tensorflow as tf
-from trainer.utils import colab
+from gh_tools.utils import colab
 
 class LogCode(tf.keras.callbacks.Callback):
     def __init__(self, job_dir, code_dir='.', endpoint_url = 'https://s3.wasabisys.com'):
