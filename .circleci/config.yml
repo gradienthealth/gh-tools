@@ -38,15 +38,12 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - run:
-          name: upgrade pip
-          command:
-            pip install --upgrade pip
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
       - run:
           name: install python dependencies
           command: |
+            pip install --upgrade pip
             python3 -m venv venv
             . venv/bin/activate
             make dev
@@ -71,15 +68,12 @@ jobs:
       - image: circleci/python:<< parameters.version >>
     steps:
       - checkout
-      - run:
-          name: upgrade pip
-          command:
-            pip install --upgrade pip
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
       - run:
           name: install python dependencies
           command: |
+            pip install --upgrade pip
             python3 -m venv venv
             . venv/bin/activate
             make dev
@@ -110,16 +104,13 @@ jobs:
     docker:
       - image: circleci/python:3.6
     steps:
-      - run:
-          name: upgrade pip
-          command:
-            pip install --upgrade pip
       - checkout
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
       - run:
           name: install python dependencies
           command: |
+            pip install --upgrade pip
             python3 -m venv venv
             . venv/bin/activate
             make dev
