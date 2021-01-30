@@ -1,6 +1,6 @@
 import tensorflow as tf
 import os
-from trainer import callbacks
+from gh_tools import callbacks
 import tempfile
 from pathlib import Path
 
