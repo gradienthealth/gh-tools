@@ -1,3 +1,4 @@
 tensorflow==2.4.1
 tfa-nightly
 awscli==1.18.223
+ipython

@@ -33,5 +33,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    install_requires=['awscli>=1.18.223', 'tensorflow>=2.4.1', 'tfa-nightly']
+    install_requires=['ipython', 'awscli>=1.18.223', 'tensorflow>=2.4.1', 'tfa-nightly']
 )
