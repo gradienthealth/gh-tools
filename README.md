@@ -1,6 +1,7 @@
 # Gradient Health Tools
 
-Tools to be used primarily in colab training environment and using wasabi storage for logging/data
+Tools to be used primarily in colab training environment and using wasabi storage for logging/data.
+Also includes tools for common dicom preprocessing steps.
 
 # Callbacks
 
