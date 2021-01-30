@@ -7,14 +7,6 @@ workflows:
             tags:
               only: /.*/
       - test-python-install:
-          version: "3.4"
-          requires:
-            - build
-      - test-python-install:
-          version: "3.5"
-          requires:
-            - build
-      - test-python-install:
           version: "3.6"
           requires:
             - build
@@ -91,7 +83,7 @@ jobs:
           name: Smoke Test Install 
           command: |
             python --version
-            sudo pip3 install gh_tools
+            sudo pip3 install .
   integration:
     docker:
       - image: circleci/python:3.6
