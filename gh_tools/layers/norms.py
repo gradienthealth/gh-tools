@@ -49,26 +49,27 @@ class DenormalizeLayer(tf.keras.layers.Layer):
 class PaddingLayer(tf.keras.layers.Layer):
     def __init__(self, divisible=16, name='padding'):
         super().__init__()
-        self.divisible = tf.constant(divisible, tf.int32)
+        self.divisible = divisible
         
     def call(self, inputs):
         shape = tf.shape(inputs)
-        pady = (self.divisible - shape[1] % self.divisible)
-        padx = (self.divisible - shape[2] % self.divisible)
-        padyl = pady//2
-        padyr = pady - padyl
-        padxl = padx//2
-        padxr = padx - padxl       
+        divisible = tf.constant(self.divisible, tf.int32)
+        pady = (divisible - shape[1] % divisible)
+        padx = (divisible - shape[2] % divisible)
+        y1 = pady//2
+        y2 = pady - y1
+        x1 = padx//2
+        x2 = padx - x1       
         paddings = tf.stack([
-          tf.concat([0,0], axis=0),
-          tf.concat([y1, y2], axis=0),
-          tf.concat([x1, x2], axis=0),
-          tf.concat([0,0], axis=0),
+          tf.stack([0,0], axis=0),
+          tf.stack([y1, y2], axis=0),
+          tf.stack([x1, x2], axis=0),
+          tf.stack([0,0], axis=0),
         ], axis=0)
 
         x = inputs
         x = tf.pad(x, paddings, "REFLECT")
-        return x, padyl, padyr, padxl, padxr
+        return x, y1, y2, x1, x2
     def get_config(self):
         return {"divisible": self.divisible}
 
