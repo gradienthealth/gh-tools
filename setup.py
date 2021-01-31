@@ -2,9 +2,9 @@ import setuptools
 from setuptools.command.install import install
 import os
 import sys
-import gh_tools
+from gh_tools.version import VERSION
 
-VERSION = gh_tools.__version__
+VERSION = VERSION
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
