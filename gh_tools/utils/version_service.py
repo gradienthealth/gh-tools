@@ -102,7 +102,7 @@ class VersionService:
           index = parselist.index(min(parselist))
         return os.path.splitext(files[index])[0]
 
-    def load_model(self, path=None, version=None):
+    def load_model(self, path=None, version=None, compile=False):
         if version is not None:
           path = os.path.join(
             self.keras_storage.local_dir, 
@@ -111,13 +111,13 @@ class VersionService:
           )
         elif path is None:
           path = self.get_best()
-        return tf.keras.models.load_model(path, compile=False), os.path.basename(path)
+        return tf.keras.models.load_model(path, compile=compile), os.path.basename(path)
 
-    def save_model(self, model, name=None, tag='manual'):
+    def save_model(self, model, tag='manual', name=None):
         tag = tag + '-' + datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
         name = '' if name is None else '-' + name
 
-        model.save(os.path.join(self.keras_storage.local_dir, 'models', tag + name))
-        model.save_weights(os.path.join(self.keras_storage.local_dir, 'models', tag + name))
-        model.save(os.path.join(self.keras_storage.local_dir, 'models', tag + name + '.h5'))
+        model.save(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name))
+        model.save_weights(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name))
+        model.save(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name + '.h5'))
         self.keras_storage.sync()
