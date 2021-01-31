@@ -56,7 +56,7 @@ class VersionService:
           update_freq=self.save_freq)
 
         self.saving = tf.keras.callbacks.ModelCheckpoint(
-          os.path.join(self.keras_storage.local_dir, 'models', self.save_format), 
+          os.path.join(self.keras_storage.local_dir, 'models', self.save_format, '1'), 
           monitor=self.monitor, 
           verbose=self.verbose, 
           save_freq=self.save_freq, 
@@ -103,21 +103,26 @@ class VersionService:
         return os.path.splitext(files[index])[0]
 
     def load_model(self, path=None, version=None, compile=False):
+        basename = None
         if version is not None:
           path = os.path.join(
             self.keras_storage.local_dir, 
             'models', 
             version
           )
+          basename = os.path.basename(path)
+          path = os.path.join(path, '1')
         elif path is None:
           path = self.get_best()
-        return tf.keras.models.load_model(path, compile=compile), os.path.basename(path)
+          basename = os.path.basename(path)
+          path = os.path.join(path, '1')
+        return tf.keras.models.load_model(path, compile=compile), basename
 
     def save_model(self, model, tag='manual', name=None):
         tag = tag + '-' + datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
         name = '' if name is None else '-' + name
 
-        model.save(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name))
+        model.save(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name, '1'))
         model.save_weights(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name))
         model.save(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name + '.h5'))
         self.keras_storage.sync()
