@@ -1,5 +1,6 @@
 import setuptools
 from setuptools.command.install import install
+import os
 
 VERSION = '0.0.2'
 
