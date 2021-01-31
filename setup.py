@@ -1,8 +1,10 @@
 import setuptools
 from setuptools.command.install import install
 import os
+import sys
+import gh_tools
 
-VERSION = '0.0.2'
+VERSION = gh_tools.__version__
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
@@ -37,5 +39,5 @@ setuptools.setup(
     cmdclass={
         'verify': VerifyVersionCommand,
     },
-    install_requires=['ipython', 'awscli>=1.18.223', 'tensorflow>=2.4.1', 'tfa-nightly']
+    install_requires=['parse>=1.19.0', 'ipython', 'awscli>=1.18.223', 'tensorflow>=2.4.1', 'tfa-nightly']
 )

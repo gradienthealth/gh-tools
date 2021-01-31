@@ -92,7 +92,8 @@ class VersionService:
           self.keras_storage.local_dir, 
           'models',
           '*.h5'
-        )
+        ))
+
         parselist = [parse.parse(save_format, os.path.basename(os.path.splitext(f)[0]))[monitor] for f in files]
         if mode is 'max':
           index = parselist.index(max(parselist))
@@ -101,16 +102,21 @@ class VersionService:
         return os.path.splitext(files[index])[0]
 
     def load_model(self, path=None, version=None):
-        if path is not None:
-          return tf.keras.models.load_model(path)
         if version is not None:
-          return tf.keras.models.load_model(
-              os.path.join(
-                self.keras_storage.local_dir, 
-                'models', 
-                version
-              )
+          path = os.path.join(
+            self.keras_storage.local_dir, 
+            'models', 
+            version
           )
-        else:
-          return tf.keras.models.load_model(self.get_best())
-        
+        elif path is None:
+          path = self.get_best()
+        return tf.keras.models.load_model(path, compile=False), os.path.basename(path)
+
+    def save_model(self, model, name=None, tag='manual'):
+        tag = tag + '-' + datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
+        name = '' if name is None else '-' + name
+
+        model.save(os.path.join(self.keras_storage.local_dir, 'models', tag + name))
+        model.save_weights(os.path.join(self.keras_storage.local_dir, 'models', tag + name))
+        model.save(os.path.join(self.keras_storage.local_dir, 'models', tag + name + '.h5'))
+        self.keras_storage.sync()
