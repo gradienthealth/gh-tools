@@ -62,3 +62,26 @@ def apply_transformation_matrix(values):
   G = ((G+1)/2)*tf.cast(tf.stack([height, width]) - 1, tf.float32)[None, None, None, :]
   resampled_image = tfa.image.resampler(image, G)
   return resampled_image
+
+@tf.function
+def equalize_histogram(image, bins=65535):
+    # Compute the histogram of an image, returns as a float from 0 to 1.
+    image_dtype = image.dtype
+    image = (image - tf.reduce_min(image))/(tf.reduce_max(image) - tf.reduce_min(image))
+    image = tf.round(image*bins)
+    image = tf.cast(image, tf.int32)
+
+    histo = tf.histogram_fixed_width(image, [0, bins], nbins=bins+1)
+    # For the purposes of computing the step, filter out the nonzeros.
+    nonzero_histo = tf.boolean_mask(histo, histo != 0)
+    step = (tf.reduce_sum(nonzero_histo) - nonzero_histo[-1]) // bins
+    # If step is zero, return the original image.  Otherwise, build
+    # lut from the full histogram and step and then index from it.
+    if step == 0: result = image
+    else:
+        lut_values = (tf.cumsum(histo, exclusive=True) + (step // 2)) // step
+        lut_values = tf.clip_by_value(lut_values, 0, bins)
+        result = tf.gather(lut_values, image)
+    result = tf.cast(result, tf.float32) 
+    result = (result - tf.reduce_min(result))/(tf.reduce_max(result) - tf.reduce_min(result))
+    return result
