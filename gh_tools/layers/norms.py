@@ -97,3 +97,57 @@ class DepaddingLayer(tf.keras.layers.Layer):
     @classmethod
     def from_config(cls, config):
         return cls(**config)
+
+class CenterCropping(tf.keras.layers.Layer):
+    def __init__(self, size=(512, 512), name='cropping'):
+        super().__init__()
+        self.size = size
+    
+    @tf.function
+    def call(self, inputs):
+        image = inputs
+        shape = tf.shape(inputs)
+        batch = shape[0]
+        height = shape[1]
+        width = shape[2]
+        channel = shape[3]
+        size = tf.reduce_min(shape) // 2
+
+        if height > width: image = tf.image.crop_to_bounding_box(image, tf.abs(height-width)//2, 0, width, width)
+        if width > height: image = tf.image.crop_to_bounding_box(image, 0, tf.abs(height-width)//2, height, height)
+        image = tf.image.resize(image, size=self.size, method='bilinear')
+        return image, height, width
+    def get_config(self):
+        return {"size": self.size}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+class DeCenterCropping(tf.keras.layers.Layer):
+    def __init__(self, name='decropping'):
+        super().__init__()
+
+    @tf.function
+    def call(self, inputs):
+        image = inputs[0]
+        height = inputs[1]
+        width = inputs[2]       
+        diff = tf.abs(height-width)
+        if height > width:
+            image = tf.image.resize(image, size=(width, width), method='bilinear')
+            image = tf.pad(image, [[0,0], [diff//2, diff - diff//2], [0,0], [0,0]])
+        if width > height:
+            image = tf.image.resize(image, size=(height, height), method='bilinear')
+            image = tf.pad(image, [[0,0], [0,0], [diff//2, diff - diff//2], [0,0]])
+        else:
+            image = tf.image.resize(image, size=(width, width), method='bilinear')
+
+        return image
+
+    def get_config(self):
+        return {"name": "decropping"}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
