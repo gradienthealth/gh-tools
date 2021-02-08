@@ -151,3 +151,18 @@ class DeCenterCropping(tf.keras.layers.Layer):
     @classmethod
     def from_config(cls, config):
         return cls(**config)
+
+class Logit2ProbabilityLayer(tf.keras.layers.Layer):
+    def __init__(self, name='logit2probability'):
+        super().__init__()
+
+    def call(self, inputs):
+        x = inputs
+        return tf.math.exp(x)/(1 + tf.math.exp(x))
+
+    def get_config(self):
+        return {"name": "logit2probability"}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
