@@ -46,6 +46,53 @@ class DenormalizeLayer(tf.keras.layers.Layer):
     def from_config(cls, config):
         return cls(**config)
 
+class BoundLayer(tf.keras.layers.Layer):
+    def __init__(self, min_value=0, max_value=1, name='bound'):
+        self.min_value = min_value
+        self.max_value = max_value
+        super().__init__()
+
+    def call(self, inputs):
+        x = inputs
+        curr_min = tf.reduce_min(x)
+        curr_max = tf.reduce_max(x)
+        x = (x - curr_min) / (curr_max - curr_min)
+        dynamic_range = self.max_value - self.min_value
+        x = x*dynamic_range + self.min_value
+        return x, curr_min, curr_max
+
+    def get_config(self):
+        return {
+            "max_value": self.max_value,
+            "min_value": self.min_value
+        }
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+class DeBoundLayer(tf.keras.layers.Layer):
+    def __init__(self, name='debound'):
+        super().__init__()
+
+    def call(self, inputs):
+        x = inputs[0]
+        min_value = tf.reduce_min(x)
+        max_value = tf.reduce_max(x)
+        x = (x - min_value)/ (max_value - min_value)
+        old_min = inputs[1]
+        old_max = inputs[2]
+        old_dynamic_range = old_max - old_min
+        x = x*old_dynamic_range + old_min
+        return x
+
+    def get_config(self):
+        return {"name": "debound"}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
 class PaddingLayer(tf.keras.layers.Layer):
     def __init__(self, divisible=16, name='padding'):
         super().__init__()

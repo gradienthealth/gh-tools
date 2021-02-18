@@ -70,18 +70,17 @@ class VersionService:
           save_freq=self.save_freq, 
           mode=self.mode)
 
-        self.saving_h5 = tf.keras.callbacks.ModelCheckpoint(
-          os.path.join(self.keras_storage.local_dir, 'models', self.save_format + '.h5'),
-          monitor=self.monitor, 
-          verbose=self.verbose, 
-          save_freq=self.save_freq, 
-          mode=self.mode)
+        # self.saving_h5 = tf.keras.callbacks.ModelCheckpoint(
+        #   os.path.join(self.keras_storage.local_dir, 'models', self.save_format + '.h5'),
+        #   monitor=self.monitor, 
+        #   verbose=self.verbose, 
+        #   save_freq=self.save_freq, 
+        #   mode=self.mode)
 
         return [self.tensorboard, 
                 self.log_code,
                 self.saving, 
                 self.saving_weights, 
-                self.saving_h5,
                 self.keras_storage]
 
     def get_best(self, monitor=None, mode=None, save_format=None):
@@ -92,7 +91,7 @@ class VersionService:
         files = glob.glob(os.path.join(
           self.keras_storage.local_dir, 
           'models',
-          '*.h5'
+          '*.index'
         ))
 
         parselist = [parse.parse(save_format, os.path.basename(os.path.splitext(f)[0]))[monitor] for f in files]
@@ -102,7 +101,7 @@ class VersionService:
           index = parselist.index(min(parselist))
         return os.path.splitext(files[index])[0]
 
-    def load_model(self, path=None, version=None, compile=False):
+    def load_model(self, path=None, version=None, compile=False, monitor=None, mode=None, save_format=None):
         basename = None
         if version is not None:
           path = os.path.join(
@@ -113,7 +112,7 @@ class VersionService:
           basename = os.path.basename(path)
           path = os.path.join(path, '1')
         elif path is None:
-          path = self.get_best()
+          path = self.get_best(monitor=None, mode=None, save_format=None)
           basename = os.path.basename(path)
           path = os.path.join(path, '1')
         return tf.keras.models.load_model(path, compile=compile), basename
