@@ -7,3 +7,4 @@ from gh_tools.layers.norms import DepaddingLayer
 from gh_tools.layers.norms import CenterCropping
 from gh_tools.layers.norms import DeCenterCropping
 from gh_tools.layers.norms import Logit2ProbabilityLayer
+from gh_tools.layers.edit import insert_layer_nonseq
