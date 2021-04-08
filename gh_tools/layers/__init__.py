@@ -8,3 +8,6 @@ from gh_tools.layers.norms import CenterCropping
 from gh_tools.layers.norms import DeCenterCropping
 from gh_tools.layers.norms import Logit2ProbabilityLayer
 from gh_tools.layers.edit import insert_layer_nonseq
+from gh_tools.layers.gradcam import GradCamLayer2D
+from gh_tools.layers.norms import ResizeLayer
+from gh_tools.layers.norms import DeResizeLayer

@@ -150,7 +150,7 @@ class CenterCropping(tf.keras.layers.Layer):
         super().__init__()
         self.size = size
         self.mode = mode
-        assert self.mode is 'clip' or self.mode is 'pad'
+        assert self.mode is 'clip'
 
     @tf.function
     def call(self, inputs):
@@ -181,7 +181,7 @@ class DeCenterCropping(tf.keras.layers.Layer):
     def __init__(self, mode='clip', name='decropping'):
         super().__init__()
         self.mode = mode
-        assert self.mode is 'clip' or self.mode is 'pad'
+        assert self.mode is 'clip'
 
     @tf.function
     def call(self, inputs):
@@ -217,6 +217,38 @@ class Logit2ProbabilityLayer(tf.keras.layers.Layer):
 
     def get_config(self):
         return {"name": "logit2probability"}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+class ResizeLayer(tf.keras.layers.Layer):
+    def __init__(self, name='resize', size=None):
+        assert size is not None, 'provide an image size such as (224, 224)'
+        self.size = size
+        super().__init__()
+
+    def call(self, inputs):
+        return [tf.image.resize(inputs, self.size), tf.shape(inputs)[1], tf.shape(inputs)[2]]
+
+    def get_config(self):
+        return {"size": self.size}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+class DeResizeLayer(tf.keras.layers.Layer):
+    def __init__(self, name='Deresize'):
+        super().__init__()
+
+    def call(self, inputs):
+        height = inputs[1]
+        width = inputs[2]
+        return tf.image.resize(inputs[0], (height, width))
+
+    def get_config(self):
+        return {"name": "Deresize"}
 
     @classmethod
     def from_config(cls, config):

@@ -125,3 +125,4 @@ class VersionService:
         model.save_weights(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name))
         model.save(os.path.join(self.keras_storage.local_dir, 'manual_models', tag + name + '.h5'))
         self.keras_storage.sync()
+        print('Model saved to: {}'.format(os.path.join(self.keras_storage.job_dir, 'manual_models', tag + name, '1')))
