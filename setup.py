@@ -3,7 +3,7 @@ from setuptools.command.install import install
 import os
 import sys
 
-VERSION = '0.0.5' # update __version__ in __init__ as well
+VERSION = '0.0.7' # update __version__ in __init__ as well
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""

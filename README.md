@@ -23,6 +23,9 @@ Used for checking and saving notebooks in colab programmatically
 ### gh_tools.utils.version_service
 Bundles callbacks related to versioning and logging.
 
+### gh_tools.layers
+Custom Keras Layers Useful for wrapping models.
+
 # Contributing and Issues
 Contributions are welcome in the form of pull requests.
 For issues, please provide a minimal example of code which results in an error.
