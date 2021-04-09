@@ -1,4 +1,5 @@
 # Gradient Health Tools
+[![Python Package](https://github.com/gradienthealth/gh-tools/actions/workflows/main.yml/badge.svg)](https://github.com/gradienthealth/gh-tools/actions/workflows/main.yml)
 
 Tools to be used primarily in colab training environment and using wasabi storage for logging/data.
 Also includes tools for common dicom preprocessing steps.
