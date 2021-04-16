@@ -14,14 +14,15 @@ class LogCode(tf.keras.callbacks.Callback):
         self.started = False
     
     def save_and_upload_notebook(self, version):
-        notebook_filename = os.path.basename(os.environ["NOTEBOOK_FILEPATH"])
-        print('saving notebook...')
-        colab.save_notebook()
-        tf.io.gfile.copy(os.environ["NOTEBOOK_FILEPATH"], '{}/code/{}/{}'.format(
-          self.job_dir, 
-          version, 
-          notebook_filename))
-        print('saving complete.')
+        # notebook_filename = os.path.basename(os.environ["NOTEBOOK_FILEPATH"])
+        # print('saving notebook...')
+        # colab.save_notebook()
+        # tf.io.gfile.copy(os.environ["NOTEBOOK_FILEPATH"], '{}/code/{}/{}'.format(
+        #   self.job_dir, 
+        #   version, 
+        #   notebook_filename))
+        # print('saving complete.')
+        print('is colab notebook.')
 
     def upload(self):
         datetime_string = datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
